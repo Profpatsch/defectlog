@@ -1,0 +1,126 @@
+= Interface zum Import/Export von Daten mit DefectLog
+Profpatsch <mail@profpatsch.de>
+v0.2 2013-06-10
+
+== Export
+
+Generell sollen die Daten so exportiert werden, dass keine Datenbank nötig ist,
+um die Referenzen zu verstehen. Aus dem Datensatz sollte es direkt möglich sein,
+ein Dokument von Rundgängen und Mängeln zu erstellen.
+
+Zur Darstellung wird JSON (JavaScript Object Notation) verwendet. +
+Binäre Daten werden in Base64 codiert.
+
+.Struktur des Formats (nur teils valides JSON)
+----------------------------------------
+# Array von Begehungen
+[
+  # Begehung
+  {
+    # UUID für das Objekt
+    # TODO: Ganzes Objekt statt UUID?
+    "id": "03535369-5a9f-402d-8e16-7e5753c55dbc",
+    # Inspektoren, die teilgenommen haben
+    "inspector-responsible": "name",
+    "inspector-other": ["name 1", "name 2", …],
+    # Liste aus Defekten
+    "defects":
+      [
+        # Defekt
+        {
+          "id": "25e9959b-9522-4a07-896f-f977699f9a16",
+          # Datum in Sekunden seit der Epoche. 
+          "timestamp": 1370868159,
+          "due-date":  1370948159,
+          # Daten des Defekts
+          "data":
+            [
+              # Array eines Datenblocks
+              {"type": "datatype", "data": "actualData"},
+              {…}
+            ],
+          "position-description": "Text, der die Position beschreibt"
+        },
+        # Weiterer Defekt
+        {…}
+      ]
+  },
+  # Weitere Begehung
+  {…}
+]
+----------------------------------------
+
+
+== Import
+
+Verschiedene Dinge müssen der App bereitgestellt werden.
+Das folgende Interface definiert einmal eine Liste von Objekten (Gebäuden) und
+ihren Eigenschaften, andererseits einen Weg, Checklisten und Textbausteine in
+das Programm zu importieren.
+
+.Liste aus Objekten
+--------------------------------------------------
+[
+  # Objekt
+  {
+    "id": "79a3387d-6dfe-41f8-a932-2d2decf3b78d",
+    "name": "Name des Objekts",
+    "address": {
+      "street": "Straße und Hausnummer",
+      "town": "Ort",
+      "postal-code": "Postleitzahl",
+      "additional": "Zusätzliche Beschreibung",
+    },
+    # Zusätzliche Informationen über das Objekt, als Schlüssel-Werte-Paare
+    "subject-information": {
+      "key1": "value1",
+      "key2": "value2",
+      …
+    },
+    "contact-person": {
+      "name": "Name",
+      "address": {
+        # Wie oben.
+      },
+      "phone": ["Telefonnummer1", "Telefonnummer2" …],
+    
+    },
+    # Liste aus Objektkategorien mit den IDs der zugehörigen Checklists.
+    "subject-category": [
+      {
+        "name": "Name der Objektkategorie",
+        "checklists": ["ChecklistID1", "ChecklistID2", …]},
+        # Dateien werden relativ zur JSON angegeben (Müssen separat auf das
+        # Gerät geschoben werden)
+        "files": ["./pfad", "./pfad", …]
+      },
+      …
+    ]
+    "subject-files": ["./pfad_zu_datei1", "./pfad_zu_datei2", …]
+  }
+  
+]
+--------------------------------------------------
+
+.Textbausteine
+--------------------------------------------------
+# Liste aus Kategorien
+[
+  # Kategorie
+  {
+    "name": "Kategorienname",
+    "number": "Laufende Nummer der Kategorien"
+    # Liste aus Textbausteinen
+    "text-blocks": [
+      # Textbaustein
+      {
+        "name": "Texbausteinname",
+        "number": "Laufende Nummer des Textbausteins in der Kategorie",
+        "content": "Eigentlicher Textbaustein"
+      }
+      { … }
+    ]
+  },
+  { … }
+]
+--------------------------------------------------

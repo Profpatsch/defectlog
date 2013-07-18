@@ -1,0 +1,20 @@
+Nutzer_anlegen
+::= Login ('Neuer Nutzer'|'Login(Nutzer exisitiert nicht)') Nutzer_anlegen ('OK') Login
+
+Login
+::= Login 'Login(Nutzer exisitiert)' Rundgangübersicht
+
+Rundgangübersicht
+::=Rundgangübersicht ('Rundgang_klick' Mangelübersicht|'Neu...' Gebäudeauswahl|'Logout' App_schließen|'Export' Export)
+
+Mangelübersicht
+::=Mangelübersicht ('Checklist' Checkliste| 'Pläne' Planübersicht 'Pläne' Planauswahl| 'Neu...' Mangelerfassung)
+
+Mangelerfassung
+::=Mangelerfassung ('Speichern' Mangelübersicht)
+
+Gebäudeauswahl
+::=Gebäudeauswahl ('Gebäude_klick') Rundgangübersicht
+
+Export
+::=Export 'Bestätigen' (Exportieren App_schließen)
